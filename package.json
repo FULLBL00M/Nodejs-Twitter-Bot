@@ -1,5 +1,5 @@
 {
-  "name": "random-image-tweet",
+  "name": "random-image-twittetbo",
   "version": "1.0.0",
   "description": "Tweet a random image from a folder.",
   "main": "server.js",
