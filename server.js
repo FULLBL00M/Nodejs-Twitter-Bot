@@ -49,7 +49,7 @@ function upload_random_image(images){
 }
 
 
-fs.readdir(__dirname + '/assets', function(err, files) {
+fs.readdir(__dirname , function(err, files) {
   if (err){
     console.log(err);
   }
