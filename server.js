@@ -54,16 +54,28 @@ function upload_random_image_remote(urls, callback){
     });
 }
 
+function extension_check(url) {
+/* Check if file has a known image extension, courtesy of revdancatt. */
+    var extName;
+    extName = path.extname(url).toLowerCase();
+    return extName === ".png" || extName === ".jpg" || extName === ".jpeg";
+};
+
 fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
   if (err) {
-    return console.log(err);
+    console.log('ERROR:');
+    console.log(err);
+    return false;
   }
   data = data.split('\n');
-  var urls = [];
+  var urls = [], url;
   
   for (var i = 0, j = data.length; i < j; i++){
     if (data[i].length){
-      urls.push(JSON.parse(data[i]).url);    
+      url = JSON.parse(data[i]).url;
+      if (extension_check(url)){
+        urls.push(url);
+      }
     }
   }
 
