@@ -70,8 +70,8 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
   /* You have two options here. Either you will keep your bot running, and upload images using setInterval (see below; 10000 means '10 milliseconds', or 10 seconds), -- */
 
   setInterval(function(){
-      upload_random_image_remote(urls);
-    }, 10000);
+    upload_random_image_remote(urls);
+  }, 10000);
 
     /* Glitch doesn't support cron yet  (code.tutsplus.com/tutorials/scheduling-tasks-with-cron-jobs--net-8800), but once it does, you can instead run -- */
     // upload_random_image_remote(urls);
