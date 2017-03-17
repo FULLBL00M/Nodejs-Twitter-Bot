@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Tweet a random image from a folder.",
   "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "twit": "^2.1.0"
   },
