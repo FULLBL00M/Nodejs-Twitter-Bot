@@ -9,48 +9,47 @@ var fs = require('fs'),
     };
 
 
-var T = new Twit(config);
+// var T = new Twit(config);
 
 function pick_random_image(images){
   return images[Math.floor(Math.random() * images.length)];
-
 }
 
 function upload_random_image(images){
   console.log('Opening an image...');
-  var image_path = path.join(__dirname, '/front-end/assets/' + pick_random_image(images)),
+  var image_path = path.join(__dirname, '/assets/' + pick_random_image(images)),
       b64content = fs.readFileSync(image_path, { encoding: 'base64' });
 
   console.log('Uploading an image...');
 
-  T.post('media/upload', { media_data: b64content }, function (err, data, response) {
-    if (err){
-      console.log('ERROR:');
-      console.log(err);
-    }
-    else{
-      console.log('Image uploaded!');
-      console.log('Now tweeting it...');
+//   T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+//     if (err){
+//       console.log('ERROR:');
+//       console.log(err);
+//     }
+//     else{
+//       console.log('Image uploaded!');
+//       console.log('Now tweeting it...');
 
-      T.post('statuses/update', {
-        media_ids: new Array(data.media_id_string)
-      },
-        function(err, data, response) {
-          if (err){
-            console.log('ERROR:');
-            console.log(err);
-          }
-          else{
-            console.log('Posted an image!');
-          }
-        }
-      );
-    }
-  });
+//       T.post('statuses/update', {
+//         media_ids: new Array(data.media_id_string)
+//       },
+//         function(err, data, response) {
+//           if (err){
+//             console.log('ERROR:');
+//             console.log(err);
+//           }
+//           else{
+//             console.log('Posted an image!');
+//           }
+//         }
+//       );
+//     }
+//   });
 }
 
 
-fs.readdir(__dirname + '/images', function(err, files) {
+fs.readdir(__dirname + '/assets', function(err, files) {
   if (err){
     console.log(err);
   }
