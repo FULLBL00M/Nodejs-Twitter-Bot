@@ -18,7 +18,7 @@ function pick_random_image(images){
 
 function upload_random_image(images){
   console.log('Opening an image...');
-  var image_path = path.join(__dirname, '/images/' + pick_random_image(images)),
+  var image_path = path.join(__dirname, '/front-end/assets/' + pick_random_image(images)),
       b64content = fs.readFileSync(image_path, { encoding: 'base64' });
 
   console.log('Uploading an image...');
