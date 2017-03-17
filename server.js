@@ -49,7 +49,18 @@ function upload_random_image(images){
 }
 
 
-fs.readdir(__dirname , function(err, files) {
+// fs.readdir(__dirname, function(err, files) {
+
+fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
+  if (err) {
+    return console.log(err);
+  }
+  console.log(data);
+});
+
+return false;
+
+fs.readdir('./', function(err, files) {
   if (err){
     console.log(err);
   }
@@ -58,6 +69,7 @@ fs.readdir(__dirname , function(err, files) {
     files.forEach(function(f) {
       images.push(f);
     });
+    console.log(images);
 
   /*
     You have two options here. Either you will keep your bot running, and upload images using setInterval (see below; 10000 means '10 milliseconds', or 10 seconds), --
