@@ -1,7 +1,7 @@
 {
 	"name": "random-image-twitterbot",
 	"version": "0.0.1",
-  "description": "Tweet a random image from a folder.",
+  "description": "Tweet a random image.",
 	"main": "server.js",
 	"scripts": {
 		"start": "node server.js"
@@ -18,6 +18,7 @@
 	},
 	"keywords": [
 		"node",
+		"glitch",
 		"gomix",
 		"twitter",
 		"twitterbot",

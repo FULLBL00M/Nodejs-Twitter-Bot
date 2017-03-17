@@ -32,20 +32,19 @@ function upload_random_image_remote(urls, callback){
             else{
               console.log('Now tweeting it...');
 
-//               T.post('statuses/update', {
-//                 media_ids: new Array(data.media_id_string)
-//               },
-//                 function(err, data, response) {
-//                   if (err){
-//                     console.log('ERROR:');
-//                     console.log(err);
-//                   }
-//                   else{
-//                     console.log('Posted an image!');
-//                   }
-//                 }
-//               );
-
+              T.post('statuses/update', {
+                media_ids: new Array(data.media_id_string)
+              },
+                function(err, data, response) {
+                  if (err){
+                    console.log('ERROR:');
+                    console.log(err);
+                  }
+                  else{
+                    console.log('Posted an image!');
+                  }
+                }
+              );
             }
           });            
         } else {
@@ -77,4 +76,3 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
     /* Glitch doesn't support cron yet  (code.tutsplus.com/tutorials/scheduling-tasks-with-cron-jobs--net-8800), but once it does, you can instead run -- */
     // upload_random_image_remote(urls);
 });
-
