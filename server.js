@@ -22,6 +22,7 @@ function pick_random_image(images){
   return images[Math.floor(Math.random() * images.length)];
 }
 
+
 function upload_random_image(images){
   console.log('Opening an image...');
   var image_path = path.join(__dirname, '/assets/' + pick_random_image(images)),
@@ -29,6 +30,29 @@ function upload_random_image(images){
 
   console.log('Uploading an image...');
 
+
+function upload_random_image_remote(urls){
+  console.log('Opening an image...');
+  
+  request.get(pick_random_image(urls), function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+          var data = "data:" + response.headers["content-type"] + ";base64," + new Buffer(body).toString('base64');
+          console.log(data);
+
+        // console.log(body);
+          // Continue with your processing here.
+      }
+  });
+  
+  
+  
+  var image_path = path.join(__dirname, '/assets/' + pick_random_image(images)),
+      b64content = fs.readFileSync(image_path, { encoding: 'base64' });
+
+
+  console.log('Uploading an image...');
+
+}
 //   T.post('media/upload', { media_data: b64content }, function (err, data, response) {
 //     if (err){
 //       console.log('ERROR:');
@@ -70,37 +94,33 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
       urls.push(JSON.parse(data[i]).url);    
     }
   }
-  // console.log(urls);
-  console.log(pick_random_image(urls));
-  download(pick_random_image(urls), 'image', function(err, data){
-    console.log(az);
-  });
+  // upload_random_image_remote(urls);
+  console.log(pick_random_image(urls)); 
 });
 
-return false;
 
-fs.readdir('./', function(err, files) {
-  if (err){
-    console.log(err);
-  }
-  else{
-    var images = [];
-    files.forEach(function(f) {
-      images.push(f);
-    });
-    console.log(images);
+// fs.readdir('./', function(err, files) {
+//   if (err){
+//     console.log(err);
+//   }
+//   else{
+//     var images = [];
+//     files.forEach(function(f) {
+//       images.push(f);
+//     });
+//     console.log(images);
 
-  /*
-    You have two options here. Either you will keep your bot running, and upload images using setInterval (see below; 10000 means '10 milliseconds', or 10 seconds), --
-  */
-    setInterval(function(){
-      upload_random_image(images);
-    }, 10000);
+//   /*
+//     You have two options here. Either you will keep your bot running, and upload images using setInterval (see below; 10000 means '10 milliseconds', or 10 seconds), --
+//   */
+//     setInterval(function(){
+//       upload_random_image(images);
+//     }, 10000);
 
-  /*
-    Or you could use cron (code.tutsplus.com/tutorials/scheduling-tasks-with-cron-jobs--net-8800), in which case you just need:
-  */
+//   /*
+//     Or you could use cron (code.tutsplus.com/tutorials/scheduling-tasks-with-cron-jobs--net-8800), in which case you just need:
+//   */
 
-    // upload_random_image(images);
-  }
-});
+//     // upload_random_image(images);
+//   }
+// });
