@@ -10,7 +10,7 @@ var fs = require('fs'),
     };
 
 
-// var T = new Twit(config);
+var T = new Twit(config);
 
 function download(uri, filename, callback){
   request.head(uri, function(err, res, body){
@@ -32,13 +32,40 @@ function upload_random_image(images){
 
 
 function upload_random_image_remote(urls){
-  console.log('Opening an image...');
+  console.log('Loading remote image...');
   
   request.get(pick_random_image(urls), function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-          var data = "data:" + response.headers["content-type"] + ";base64," + new Buffer(body).toString('base64');
-          console.log(data);
+    if (!error && response.statusCode == 200) {
+      var b64content = "data:" + response.headers["content-type"] + ";base64," + new Buffer(body).toString('base64');
+      // console.log(b64content);
 
+      T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+        if (err){
+          console.log('ERROR:');
+          console.log(err);
+        }
+        else{
+          console.log('Image uploaded!');
+          console.log('Now tweeting it...');
+
+          T.post('statuses/update', {
+            media_ids: new Array(data.media_id_string)
+          },
+            function(err, data, response) {
+              if (err){
+                console.log('ERROR:');
+                console.log(err);
+              }
+              else{
+                console.log('Posted an image!');
+              }
+            }
+          );
+        }
+      });
+      
+        
+        
         // console.log(body);
           // Continue with your processing here.
       }
@@ -46,37 +73,8 @@ function upload_random_image_remote(urls){
   
   
   
-  var image_path = path.join(__dirname, '/assets/' + pick_random_image(images)),
-      b64content = fs.readFileSync(image_path, { encoding: 'base64' });
 
-
-  console.log('Uploading an image...');
-
-}
-//   T.post('media/upload', { media_data: b64content }, function (err, data, response) {
-//     if (err){
-//       console.log('ERROR:');
-//       console.log(err);
-//     }
-//     else{
-//       console.log('Image uploaded!');
-//       console.log('Now tweeting it...');
-
-//       T.post('statuses/update', {
-//         media_ids: new Array(data.media_id_string)
-//       },
-//         function(err, data, response) {
-//           if (err){
-//             console.log('ERROR:');
-//             console.log(err);
-//           }
-//           else{
-//             console.log('Posted an image!');
-//           }
-//         }
-//       );
-//     }
-//   });
+  }
 }
 
 
@@ -89,6 +87,7 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
   data = data.split('\n');
   var urls = [];
 
+  
   for (var i = 0, j = data.length; i < j; i++){
     if (data[i].length){
       urls.push(JSON.parse(data[i]).url);    
@@ -96,19 +95,8 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
   }
   // upload_random_image_remote(urls);
   console.log(pick_random_image(urls)); 
+  upload_random_image_remote(pick_random_image(urls));
 });
-
-
-// fs.readdir('./', function(err, files) {
-//   if (err){
-//     console.log(err);
-//   }
-//   else{
-//     var images = [];
-//     files.forEach(function(f) {
-//       images.push(f);
-//     });
-//     console.log(images);
 
 //   /*
 //     You have two options here. Either you will keep your bot running, and upload images using setInterval (see below; 10000 means '10 milliseconds', or 10 seconds), --
@@ -122,5 +110,3 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
 //   */
 
 //     // upload_random_image(images);
-//   }
-// });
