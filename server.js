@@ -1,5 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
+    request = require('request'),
     Twit = require('twit'),
     config = {
         consumer_key: process.env.CONSUMER_KEY,
@@ -10,6 +11,12 @@ var fs = require('fs'),
 
 
 // var T = new Twit(config);
+
+function download(uri, filename, callback){
+  request.head(uri, function(err, res, body){
+    request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+  });
+}
 
 function pick_random_image(images){
   return images[Math.floor(Math.random() * images.length)];
@@ -59,16 +66,15 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
   var urls = [];
 
   for (var i = 0, j = data.length; i < j; i++){
-    dataJson = JSON.parse(data[i]);
-    // console.log(dataJson.url);
-    // urls.push();
-    console.log(data[i]);
+    if (data[i].length){
+      urls.push(JSON.parse(data[i]).url);    
+    }
   }
-  // console.log(JSON.parse(data.join(',').replace(/,\s*$/, "")));
-
-  // console.log(data.join(',').replace(/,\s*$/, ""));
-
-
+  // console.log(urls);
+  console.log(pick_random_image(urls));
+  download(pick_random_image(urls), 'image', function(err, data){
+    console.log(az);
+  });
 });
 
 return false;
