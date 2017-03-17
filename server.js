@@ -29,40 +29,83 @@ function upload_random_image(images){
       b64content = fs.readFileSync(image_path, { encoding: 'base64' });
 
   console.log('Uploading an image...');
+}
 
-
-function upload_random_image_remote(urls){
+function upload_random_image_remote(urls, callback){
   console.log('Loading remote image...');
+
+    request({url: pick_random_image(urls), encoding: null}, function (err, res, body) {
+        if (!err && res.statusCode == 200) {
+            var b64content = 'data:' + res.headers['content-type'] + ';base64,'
+                , image = body.toString('base64');
+
+          T.post('media/upload', { media_data: image }, function (err, data, response) {
+            if (err){
+              console.log('ERROR:');
+              console.log(err);
+            }
+            else{
+              console.log('Image uploaded!');
+              console.log('Now tweeting it...');
+
+              T.post('statuses/update', {
+                media_ids: new Array(data.media_id_string)
+              },
+                function(err, data, response) {
+                  if (err){
+                    console.log('ERROR:');
+                    console.log(err);
+                  }
+                  else{
+                    console.log('Posted an image!');
+                  }
+                }
+              );
+              
+              
+            }
+          });
+      
+            
+        } else {
+            throw new Error('Can not download image');
+        }
+    });
+  
+  
+  
+return false;  
+  
   
   request.get(pick_random_image(urls), function (error, response, body) {
     if (!error && response.statusCode == 200) {
       var b64content = "data:" + response.headers["content-type"] + ";base64," + new Buffer(body).toString('base64');
-      // console.log(b64content);
+      console.log(b64content);
 
-      T.post('media/upload', { media_data: b64content }, function (err, data, response) {
-        if (err){
-          console.log('ERROR:');
-          console.log(err);
-        }
-        else{
-          console.log('Image uploaded!');
-          console.log('Now tweeting it...');
+//       T.post('media/upload', { media_data: b64content }, function (err, data, response) {
+//         if (err){
+//           console.log('ERROR:');
+//           console.log(err);
+//         }
+//         else{
+//           console.log('Image uploaded!');
+//           console.log('Now tweeting it...');
 
-          T.post('statuses/update', {
-            media_ids: new Array(data.media_id_string)
-          },
-            function(err, data, response) {
-              if (err){
-                console.log('ERROR:');
-                console.log(err);
-              }
-              else{
-                console.log('Posted an image!');
-              }
-            }
-          );
-        }
-      });
+//           T.post('statuses/update', {
+//             media_ids: new Array(data.media_id_string)
+//           },
+//             function(err, data, response) {
+//               if (err){
+//                 console.log('ERROR:');
+//                 console.log(err);
+//               }
+//               else{
+//                 console.log('Posted an image!');
+//               }
+//             }
+//           );
+//         }
+//       });
       
         
         
@@ -74,8 +117,8 @@ function upload_random_image_remote(urls){
   
   
 
-  }
 }
+
 
 
 // fs.readdir(__dirname, function(err, files) {
@@ -95,7 +138,7 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
   }
   // upload_random_image_remote(urls);
   console.log(pick_random_image(urls)); 
-  upload_random_image_remote(pick_random_image(urls));
+  upload_random_image_remote(urls);
 });
 
 //   /*
