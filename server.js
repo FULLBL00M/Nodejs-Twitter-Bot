@@ -55,7 +55,8 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }
-  console.log(data);
+  data = data.split('\n')
+  console.log(data.join(','));
 });
 
 return false;
