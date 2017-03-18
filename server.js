@@ -78,12 +78,14 @@ fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
       }
     }
   }
+  
+  /* Since apps on Glitch go to sleep after five minutes of inactivity, the setTimeout approach won't work. */
 
-    // upload_random_image_remote(urls);
+  // setInterval(function(){
+  //   upload_random_image_remote(urls);
+  // }, 10000);
 
-  setInterval(function(){
-    upload_random_image_remote(urls);
-  }, 10000);
-
+  /* Instead, you can use a site like cron-job.org to periodically wake up your bot every hour and run the upload_random_image_remote function. */
+  upload_random_image_remote(urls);
 
 });
