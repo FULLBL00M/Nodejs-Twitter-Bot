@@ -6,4 +6,4 @@
 2. Put all your images into the `assets` folder.
 3. Watch your bot tweet!
 
-Also, check out this "[guide](https://botwiki.org/tutorials/random-image-tweet/)" where I attempt to adapt the original code for this bot so that it runs on Glitch. 
+Also, check out this "[guide](https://botwiki.org/tutorials/importing-github-glitch/)" where I attempt to adapt the original code for this bot so that it runs on Glitch. 
