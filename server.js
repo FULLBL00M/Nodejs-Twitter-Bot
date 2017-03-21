@@ -1,6 +1,8 @@
-var fs = require('fs'),
+var express = require('express'),
+    fs = require('fs'),
     path = require('path'),
     request = require('request'),
+    app = express(),   
     Twit = require('twit'),
     config = {
         consumer_key: process.env.CONSUMER_KEY,
@@ -28,6 +30,7 @@ function upload_random_image_remote(urls, callback){
             if (err){
               console.log('ERROR:');
               console.log(err);
+              response.sendStatus(500);
             }
             else{
               console.log('Now tweeting it...');
@@ -39,9 +42,11 @@ function upload_random_image_remote(urls, callback){
                   if (err){
                     console.log('ERROR:');
                     console.log(err);
+                    response.sendStatus(500);
                   }
                   else{
                     console.log('Posted an image!');
+                    response.sendStatus(200);
                   }
                 }
               );
@@ -61,31 +66,34 @@ function extension_check(url) {
     return extName === ".png" || extName === ".jpg" || extName === ".jpeg";
 };
 
-fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
-  if (err) {
-    console.log('ERROR:');
-    console.log(err);
-    return false;
-  }
-  data = data.split('\n');
-  var urls = [], url;
-  
-  for (var i = 0, j = data.length; i < j; i++){
-    if (data[i].length){
-      url = JSON.parse(data[i]).url;
-      if (extension_check(url)){
-        urls.push(url);
+app.all("/tweet", function (request, response) {
+  console.log("Received a request...");
+
+  fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
+    if (err) {
+      console.log('ERROR:');
+      console.log(err);
+      return false;
+    }
+    data = data.split('\n');
+    var urls = [], url;
+
+    for (var i = 0, j = data.length; i < j; i++){
+      if (data[i].length){
+        url = JSON.parse(data[i]).url;
+        if (extension_check(url)){
+          urls.push(url);
+        }
       }
     }
-  }
-  
-  /* Since apps on Glitch go to sleep after five minutes of inactivity, the setTimeout approach won't work. */
 
-  // setInterval(function(){
-  //   upload_random_image_remote(urls);
-  // }, 10000);
+    upload_random_image_remote(urls);
+  });  
+});
 
-  /* Instead, you can use a site like cron-job.org to periodically wake up your bot every hour and run the upload_random_image_remote function. */
-  upload_random_image_remote(urls);
 
+
+
+var listener = app.listen(process.env.PORT, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
 });
