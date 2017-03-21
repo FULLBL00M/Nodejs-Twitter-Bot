@@ -46,7 +46,7 @@ function upload_random_image_remote(urls, callback){
                   }
                   else{
                     console.log('Posted an image!');
-                    response.sendStatus(200);
+                    // response.sendStatus(200);
                   }
                 }
               );
@@ -55,6 +55,7 @@ function upload_random_image_remote(urls, callback){
         } else {
             console.log('ERROR:');
             console.log(err);
+            // response.sendStatus(500);
         }
     });
 }
@@ -68,9 +69,9 @@ function extension_check(url) {
 
 
 app.get("/", function (request, response) {
-        response.writeHeader(200, {"Content-Type": "text/html"});  
-        response.write('<h1>random-image-twitterbot</h1><a href="https://glitch.com/edit/#!/random-image-twitterbot">See README.md</a>');  
-        response.end();  
+    response.writeHeader(200, {"Content-Type": "text/html"});  
+    response.write('<h1>random-image-twitterbot</h1><a href="https://glitch.com/edit/#!/random-image-twitterbot">See README.md</a>');  
+    response.end();  
 });
 
 
@@ -83,6 +84,7 @@ app.all("/tweet", function (request, response) {
       console.log(err);
       return false;
     }
+    
     data = data.split('\n');
     var urls = [], url;
 
