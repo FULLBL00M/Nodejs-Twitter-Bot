@@ -66,6 +66,14 @@ function extension_check(url) {
     return extName === ".png" || extName === ".jpg" || extName === ".jpeg";
 };
 
+
+app.get("/", function (request, response) {
+        response.writeHeader(200, {"Content-Type": "text/html"});  
+        response.write('<h1>random-image-twitterbot</h1><a href="https://glitch.com/edit/#!/random-image-twitterbot">See README.md</a>');  
+        response.end();  
+});
+
+
 app.all("/tweet", function (request, response) {
   console.log("Received a request...");
 
@@ -86,7 +94,6 @@ app.all("/tweet", function (request, response) {
         }
       }
     }
-
     upload_random_image_remote(urls);
   });  
 });
