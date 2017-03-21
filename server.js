@@ -30,7 +30,7 @@ function upload_random_image_remote(urls, callback){
             if (err){
               console.log('ERROR:');
               console.log(err);
-              response.sendStatus(500);
+              // response.sendStatus(500);
             }
             else{
               console.log('Now tweeting it...');
@@ -42,7 +42,7 @@ function upload_random_image_remote(urls, callback){
                   if (err){
                     console.log('ERROR:');
                     console.log(err);
-                    response.sendStatus(500);
+                    // response.sendStatus(500);
                   }
                   else{
                     console.log('Posted an image!');
