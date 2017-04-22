@@ -75,13 +75,11 @@ function extension_check(url) {
     return extName === ".png" || extName === ".jpg" || extName === ".jpeg";
 };
 
-
 app.get("/", function (request, response) {
     response.writeHeader(200, {"Content-Type": "text/html"});  
     response.write('<h1>random-image-twitterbot</h1><a href="https://glitch.com/edit/#!/random-image-twitterbot">See README.md</a>');  
     response.end();  
 });
-
 
 app.all("/tweet", function (request, response) {
   console.log("Received a request...");
@@ -99,7 +97,8 @@ app.all("/tweet", function (request, response) {
     for (var i = 0, j = data.length; i < j; i++){
       if (data[i].length){
         url = JSON.parse(data[i]).url;
-        if (extension_check(url)){
+        console.log(url);
+        if (url && extension_check(url)){
           urls.push(url);
         }
       }
@@ -107,9 +106,6 @@ app.all("/tweet", function (request, response) {
     upload_random_image_remote(urls);
   });  
 });
-
-
-
 
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
