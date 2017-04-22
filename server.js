@@ -13,14 +13,14 @@ var express = require('express'),
 
 var T = new Twit(config);
 
-function pick_random_image(images){
+function random_from_array(images){
   return images[Math.floor(Math.random() * images.length)];
 }
 
 function upload_random_image_remote(urls, callback){
   console.log('Loading remote image...');
 
-    request({url: pick_random_image(urls), encoding: null}, function (err, res, body) {
+    request({url: random_from_array(urls), encoding: null}, function (err, res, body) {
         if (!err && res.statusCode == 200) {
           var b64content = 'data:' + res.headers['content-type'] + ';base64,',
               image = body.toString('base64');
@@ -36,6 +36,14 @@ function upload_random_image_remote(urls, callback){
               console.log('Now tweeting it...');
 
               T.post('statuses/update', {
+                /* You can include text with your image as well. */            
+                // status: 'New picture!', 
+                /* Or you can pick random text from an array. */            
+                status: random_from_array([
+                  'New picture!',
+                  'Check this out!',
+                  'How cute!'
+                ]), 
                 media_ids: new Array(data.media_id_string)
               },
                 function(err, data, response) {
