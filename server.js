@@ -15,15 +15,8 @@ app.get("/", function (req, res) {
 
 app.all("/tweet", function (req, res) {
   console.log("received a request...");
-
-  fs.readFile('./.glitch-assets', 'utf8', function (err, data) {
-    if (err) {
-      console.log('error:', err);
-      return false;
-    }
-    
-    var urls = helpers.load_images(data), url;
-
+  
+  helpers.load_image_assets(function(err, urls){
     helpers.load_random_image_remote(urls, function(err, img_data){
       tweet.post_image(helpers.random_from_array([
         'Check this out!',

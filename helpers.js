@@ -9,23 +9,31 @@ module.exports = {
   get_random_int: function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
-  load_images: function(data){
+  load_image_assets: function(cb){
     console.log('reading assets folder...')
-    /* Load images from the assets folder */
-    data = data.split('\n');
-    var urls = [];
+    var that = this;
+    fs.readFile('./.glitch-assets', 'utf8', function (err, data) {
+      if (err) {
+        console.log('error:', err);
+        return false;
+      }
+      /* Load images from the assets folder */
+      data = data.split('\n');
+      var urls = [];
 
-    for (var i = 0, j = data.length; i < j; i++){
-      if (data[i].length){
-        var url = JSON.parse(data[i]).url,
-            file_name = this.get_filename_from_url(url).split('%2F')[1];
-        console.log(`- ${file_name}`);
-        if (url && this.extension_check(url)){
-          urls.push(url);
+      for (var i = 0, j = data.length; i < j; i++){
+        if (data[i].length){
+          var url = JSON.parse(data[i]).url;
+
+          if (url && that.extension_check(url)){
+            var file_name = that.get_filename_from_url(url).split('%2F')[1];            
+            console.log(`- ${file_name}`);
+            urls.push(url);
+          }
         }
       }
-    }
-    return urls;
+      cb(null, urls);
+    });      
   },
   extension_check: function(url) {
     var extName = path.extname(url).toLowerCase();
