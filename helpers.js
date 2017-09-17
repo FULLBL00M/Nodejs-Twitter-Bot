@@ -1,8 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
-    request = require('request'),
-    helpers = require(__dirname + '/helpers.js');
-
+    request = require('request');
 
 module.exports = {
   random_from_array: function(arr) {
@@ -36,7 +34,7 @@ module.exports = {
   get_filename_from_url: function(url) {
     return url.substring(url.lastIndexOf('/') + 1);
   },
-  upload_random_image_remote: function(urls, cb) {
+  load_random_image_remote: function(urls, cb) {
     console.log('loading remote image...');
     request({url: this.random_from_array(urls), encoding: null}, function (err, res, body) {
         if (!err && res.statusCode == 200) {

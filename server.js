@@ -24,7 +24,7 @@ app.all("/tweet", function (req, res) {
     
     var urls = helpers.load_images(data), url;
 
-    helpers.upload_random_image_remote(urls, function(err, img_data){
+    helpers.load_random_image_remote(urls, function(err, img_data){
       tweet.post_image(helpers.random_from_array([
         'Check this out!',
         'New picture!'
