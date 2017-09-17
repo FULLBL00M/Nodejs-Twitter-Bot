@@ -10,6 +10,7 @@ module.exports = {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
   load_image_assets: function(cb){
+    /* Load images from the assets folder */
     console.log('reading assets folder...')
     var that = this;
     fs.readFile('./.glitch-assets', 'utf8', function (err, data) {
@@ -17,7 +18,6 @@ module.exports = {
         console.log('error:', err);
         return false;
       }
-      /* Load images from the assets folder */
       data = data.split('\n');
       var urls = [];
 
