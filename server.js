@@ -14,35 +14,26 @@ app.get("/", function (req, res) {
 });
 
 app.all("/tweet", function (req, res) {
-  console.log("Received a request...");
+  console.log("received a request...");
 
-  fs.readFile('./.glitch-assets', 'utf8', function (err,data) {
+  fs.readFile('./.glitch-assets', 'utf8', function (err, data) {
     if (err) {
       console.log('error:', err);
       return false;
     }
     
-    data = data.split('\n');
-    var urls = [], url;
+    var urls = helpers.load_images(data), url;
 
-    for (var i = 0, j = data.length; i < j; i++){
-      if (data[i].length){
-        url = JSON.parse(data[i]).url;
-        console.log(url);
-        if (url && helpers.extension_check(url)){
-          urls.push(url);
-        }
-      }
-    }
-    helpers.upload_random_image_remote(urls, function(img_data){
-      tweet.post_image(helpers.random_from_array([
-        'Check this out!',
-        'New picture!'
-      ]), img_data);      
+    helpers.upload_random_image_remote(urls, function(err, img_data){
+      // tweet.post_image(helpers.random_from_array([
+      //   'Check this out!',
+      //   'New picture!'
+      // ]), img_data);      
     });
-  });  
+  });
+  res.sendStatus(200);
 });
 
 var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+  console.log(`Your app is listening on port ${listener.address().port}`);
 });
