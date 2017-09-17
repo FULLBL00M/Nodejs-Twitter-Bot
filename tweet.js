@@ -34,6 +34,7 @@ module.exports = {
             }
           }
           else{
+            console.log('tweeted!');
             if (cb){
               cb(null);
             }

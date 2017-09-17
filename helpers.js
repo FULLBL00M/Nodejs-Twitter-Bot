@@ -12,14 +12,16 @@ module.exports = {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
   load_images: function(data){
+    console.log('reading assets folder...')
     /* Load images from the assets folder */
     data = data.split('\n');
-    var urls = [], url;
+    var urls = [];
 
     for (var i = 0, j = data.length; i < j; i++){
       if (data[i].length){
-        url = JSON.parse(data[i]).url;
-        console.log(url);
+        var url = JSON.parse(data[i]).url,
+            file_name = this.get_filename_from_url(url).split('%2F')[1];
+        console.log(`- ${file_name}`);
         if (url && this.extension_check(url)){
           urls.push(url);
         }
@@ -30,6 +32,9 @@ module.exports = {
   extension_check: function(url) {
     var extName = path.extname(url).toLowerCase();
     return extName === ".png" || extName === ".jpg" || extName === ".jpeg";
+  },
+  get_filename_from_url: function(url) {
+    return url.substring(url.lastIndexOf('/') + 1);
   },
   upload_random_image_remote: function(urls, cb) {
     console.log('loading remote image...');
