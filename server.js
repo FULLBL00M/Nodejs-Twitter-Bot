@@ -7,11 +7,7 @@ var express = require('express'),
     app = express();
 
 
-app.get("/", function (req, res) {
-    res.writeHeader(200, {"Content-Type": "text/html"});  
-    res.write('<h1>random-image-twitterbot</h1><a href="https://glitch.com/edit/#!/random-image-twitterbot">See README.md</a>');  
-    res.end();  
-});
+app.use(express.static('public'));
 
 app.all("/tweet", function (req, res) {
   console.log("received a request...");
