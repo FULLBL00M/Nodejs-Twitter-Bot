@@ -20,23 +20,21 @@ module.exports = {
       }
       data = data.split('\n');
       var data_json = JSON.parse('[' + data.join(',').slice(0, -1) + ']'),
-          deleted_images = data_json.filter(function(data_line){
-            
-          }),
+          deleted_images = data_json.reduce(function(filtered, data_img) {
+              if (data_img.deleted) {
+                 var someNewValue = { name: data_img.name, newProperty: 'Foo' }
+                 filtered.push(data_img.uuid);
+              }
+              return filtered;
+            }, []),
           img_urls = [];
-    
       
       for (var i = 0, j = data.length; i < j; i++){
         if (data[i].length){
           var img_data = JSON.parse(data[i]),
               image_url = img_data.url;
-          console.log(img_data.uuid);
-          
-          
-          console.log(data_json)
-          var image_url = img_data.url;
 
-          if (image_url && that.extension_check(image_url)){
+          if (image_url && deleted_images.indexOf(img_data.uuid) === -1 && that.extension_check(image_url)){
             var file_name = that.get_filename_from_url(image_url).split('%2F')[1];            
             console.log(`- ${file_name}`);
             img_urls.push(image_url);

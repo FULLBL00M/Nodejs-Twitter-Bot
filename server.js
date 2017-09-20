@@ -13,10 +13,9 @@ helpers.load_image_assets(function(err, urls){
   // console.log(urls);
 });
 
-
 app.all("/tweet", function (req, res) {
   console.log("received a request...");
-  
+
   helpers.load_image_assets(function(err, urls){
     helpers.load_random_image_remote(urls, function(err, img_data){
       tweet.post_image(helpers.random_from_array([
