@@ -19,29 +19,21 @@ module.exports = {
         return false;
       }
       data = data.split('\n');
-      // data = data.split('\n').join(',').slice(0, -1);
-var data_json = data.map(function(data_line){
-  return `[${data_line}]`;
-})
-            console.log(data_json.join(','));
-
-      
-      
-      var data_json = JSON.parse(data)
-      var img_urls = [];
-      
-      console.log({data});
-
+      var data_json = JSON.parse('[' + data.join(',').slice(0, -1) + ']'),
+          deleted_images = data_json.filter(function(data_line){
+            
+          }),
+          img_urls = [];
+    
       
       for (var i = 0, j = data.length; i < j; i++){
-        
-        
         if (data[i].length){
           var img_data = JSON.parse(data[i]),
               image_url = img_data.url;
-          console.log(img_data);
+          console.log(img_data.uuid);
           
-          console.log()
+          
+          console.log(data_json)
           var image_url = img_data.url;
 
           if (image_url && that.extension_check(image_url)){
