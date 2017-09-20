@@ -19,20 +19,36 @@ module.exports = {
         return false;
       }
       data = data.split('\n');
-      var urls = [];
-
+      var img_urls = [];
+      
+      console.log({data});
+      
+      var deleted_images = [];
       for (var i = 0, j = data.length; i < j; i++){
+        if (data.deleted === true){
+          deleted_images.push(data.uuid);
+        }
+      }
+      
+      
+      for (var i = 0, j = data.length; i < j; i++){
+        
+        
         if (data[i].length){
-          var url = JSON.parse(data[i]).url;
+          var img_data = JSON.parse(data[i]),
+              image_url = img_data.url;
+          console.log(img_data);
+          
+          var image_url = img_data.url;
 
-          if (url && that.extension_check(url)){
-            var file_name = that.get_filename_from_url(url).split('%2F')[1];            
+          if (image_url && that.extension_check(image_url)){
+            var file_name = that.get_filename_from_url(image_url).split('%2F')[1];            
             console.log(`- ${file_name}`);
-            urls.push(url);
+            img_urls.push(image_url);
           }
         }
       }
-      cb(null, urls);
+      cb(null, img_urls);
     });      
   },
   extension_check: function(url) {

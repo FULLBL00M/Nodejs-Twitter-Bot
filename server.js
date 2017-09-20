@@ -9,6 +9,11 @@ var express = require('express'),
 
 app.use(express.static('public'));
 
+helpers.load_image_assets(function(err, urls){
+  // console.log(urls);
+});
+
+
 app.all("/tweet", function (req, res) {
   console.log("received a request...");
   
