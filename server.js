@@ -13,7 +13,7 @@ helpers.load_image_assets(function(err, urls){
   // console.log(urls);
 });
 
-app.all("/tweet", function (req, res) {
+app.all(`/${process.env.BOT_ENDPOINT}`, function (req, res) {
   console.log("received a request...");
 
   helpers.load_image_assets(function(err, urls){
