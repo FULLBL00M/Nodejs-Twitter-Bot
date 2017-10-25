@@ -8,3 +8,10 @@
 
 
 Also, check out [this tutorial](https://botwiki.org/tutorials/random-image-tweet/) and [this guide](https://botwiki.org/tutorials/importing-github-glitch/) where I attempt to adapt the original code for this bot so that it runs on Glitch. 
+
+# Support Botwiki/Botmakers
+
+- [patreon.com/botwiki](https://patreon.com/botwiki)
+- [botwiki.org/about/support](https://botwiki.org/about/support)
+
+🙇
