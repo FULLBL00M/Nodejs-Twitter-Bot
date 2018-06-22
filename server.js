@@ -13,12 +13,22 @@ app.all(`/${process.env.BOT_ENDPOINT}`, function (req, res) {
   console.log("received a request...");
 
   helpers.load_image_assets(function(err, urls){
-    helpers.load_random_image_remote(urls, function(err, img_data){
-      tweet.post_image(helpers.random_from_array([
-        'Check this out!',
-        'New picture!'
-      ]), img_data);      
-    });
+    if (!err && urls && urls.length > 0){
+      var url = helpers.random_from_array(urls);
+      helpers.load_image(url, function(err, img_data){
+        tweet.post_image(helpers.random_from_array([
+          'Check this out!',
+          'New picture!'
+        ]), img_data, function(err){
+          if (!err){
+            var remove_posted_images = process.env.REMOVE_POSTED_IMAGES;
+            if (remove_posted_images === 'yes' || remove_posted_images === 'true'){
+              helpers.remove_asset(url);
+            }
+          }        
+        });
+      });
+    }
   });
   res.sendStatus(200);
 });
