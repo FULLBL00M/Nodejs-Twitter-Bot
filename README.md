@@ -1,4 +1,4 @@
-![Tweetin'](https://botwiki.org/content/tutorials/make-an-image-posting-twitter-bot/images/posting-images.png)
+![Tweetin'](https://botwiki.org/wp-content/uploads/2018/02/posting-images.png)
 
 # random-image-twitterbot
 
