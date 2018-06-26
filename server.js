@@ -15,8 +15,19 @@ app.all(`/${process.env.BOT_ENDPOINT}`, function (req, res) {
   console.log("received a request...");
 
   helpers.load_image_assets(function(err, urls){
+    /* First, load images from the assets folder. */
     if (!err && urls && urls.length > 0){
+
+      /* Pick a random image. */
+      
       var url = helpers.random_from_array(urls);
+
+      /* You could also get the first image alphabetically. */
+      //  var url = urls.sort()[0];
+
+      /* If you want to delete the image after it's posted, update your .env file: */
+      //  REMOVE_POSTED_IMAGES='yes'
+
       helpers.load_image(url, function(err, img_data){
         tweet.post_image(helpers.random_from_array([
           'Check this out!',
