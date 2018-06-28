@@ -1,4 +1,4 @@
-![Tweetin'](https://botwiki.org/wp-content/uploads/2018/02/posting-images.png)
+![Tweetin'](https://botwiki.org/wp-content/uploads/2018/02/love-trumps-hate.png)
 
 # random-image-twitterbot
 
