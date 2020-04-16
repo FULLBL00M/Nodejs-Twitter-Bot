@@ -4,24 +4,24 @@ var fs = require('fs'),
     exec  = require('child_process');
 
 module.exports = {
-  random_from_array: function(arr) {
+  randomFromArray: function(arr) {
     return arr[Math.floor(Math.random()*arr.length)]; 
   },
-  get_random_int: function(min, max) {
+  getRandomInt: function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   },
-  get_random_range: function(min, max, fixed) {
+  getRandomRange: function(min, max, fixed) {
     return (Math.random() * (max - min) + min).toFixed(fixed) * 1;
   },
-  get_random_hex: function() {
+  getRandomHex: function() {
     return '#' + Math.random().toString(16).slice(2, 8).toUpperCase();
   },
-  shade_color: function(color, percent) {
+  shadeColor: function(color, percent) {
     // https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
     var f = parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
     return `#${(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1)}`;
   },  
-  load_assets: function(cb){
+  loadAssets: function(cb){
     console.log('reading assets folder...')
     var that = this;
     fs.readFile('./.glitch-assets', 'utf8', function (err, data) {
@@ -33,10 +33,10 @@ module.exports = {
       cb(null, data);
     });      
   },
-  load_image_assets: function(cb){
+  loadImageAssets: function(cb){
     var helpers = this;
 
-    helpers.load_assets(function(err, data){
+    helpers.loadAssets(function(err, data){
       /* Filter images in the assets folder */
       data = data.split('\n');
 
@@ -56,8 +56,8 @@ module.exports = {
             var img_data = JSON.parse(data[i]),
                 image_url = img_data.url;
   
-            if (image_url && deleted_images.indexOf(img_data.uuid) === -1 && helpers.extension_check(image_url)){
-              var file_name = helpers.get_filename_from_url(image_url).split('%2F')[1];
+            if (image_url && deleted_images.indexOf(img_data.uuid) === -1 && helpers.extensionCheck(image_url)){
+              var file_name = helpers.getFilenameFromUrl(image_url).split('%2F')[1];
               console.log(`- ${file_name}`);
               img_urls.push(image_url);
             }
@@ -69,15 +69,15 @@ module.exports = {
         cb(null, img_urls);
     });
   },
-  extension_check: function(url) {
+  extensionCheck: function(url) {
     var file_extension = path.extname(url).toLowerCase(),
         extensions = ['.png', '.jpg', '.jpeg', '.gif'];
     return extensions.indexOf(file_extension) !== -1;
   },
-  get_filename_from_url: function(url) {
+  getFilenameFromUrl: function(url) {
     return url.substring(url.lastIndexOf('/') + 1);
   },
-  load_image: function(url, cb) {
+  loadImage: function(url, cb) {
     console.log('loading remote image...');
     request({url: url, encoding: null}, function (err, res, body) {
         if (!err && res.statusCode == 200) {
@@ -90,10 +90,10 @@ module.exports = {
         }
     });
   },
-  remove_asset: function(url, cb){
+  removeAsset: function(url, cb){
     var helpers = this;
     console.log('removing asset...');
-    helpers.load_assets(function(err, data){
+    helpers.loadAssets(function(err, data){
       var data_array = data.split('\n'),
           img_data;
       data_array.forEach(function(d){
@@ -109,7 +109,7 @@ module.exports = {
       exec.exec('refresh');
     });
   },
-  download_file: function(uri, filename, cb){
+  downloadFile: function(uri, filename, cb){
     request.head(uri, function(err, res, body){
       request(uri).pipe(fs.createWriteStream(filename)).on('close', cb);
     });
