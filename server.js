@@ -13,8 +13,7 @@ let listener = app.listen( process.env.PORT, function () {
   console.log( `Your app is listening on port ${listener.address().port}` );
   
   // Check out the cron package documentation for more details: https://www.npmjs.com/package/cron
-  // let job = new CronJob( '0 * * * *', function() {
-  let job = new CronJob( '*/5 * * * *', function() {
+  let job = new CronJob( '0 * * * *', function() {
     helpers.loadImageAssets( function( err, urls ){
       /* First, load images from the assets folder. */
       if ( !err && urls && urls.length > 0 ){
