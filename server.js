@@ -1,7 +1,8 @@
 let express = require( 'express' ),
-    helpers = require( __dirname + '/helpers.js' ),
-    CronJob = require( 'cron' ).CronJob, 
-    tweet = require( __dirname + '/tweet.js' ),
+    helpers = require( __dirname + '/helpers/helpers.js' ),
+    CronJob = require( 'cron' ).CronJob,
+    cronSchedules = require( __dirname + '/helpers/cron-schedules.js' ),    
+    twitter = require( __dirname + '/helpers/twitter.js' ),
     fs = require( 'fs' ),
     path = require( 'path' ),
     request = require( 'request' ),
@@ -12,8 +13,12 @@ app.use( express.static( 'public' ) );
 let listener = app.listen( process.env.PORT, function () {
   console.log( `Your app is listening on port ${listener.address().port}` );
   
-  // Check out the cron package documentation for more details: https://www.npmjs.com/package/cron
-  let job = new CronJob( '0 * * * *', function() {
+  /*
+    Check out https://www.npmjs.com/package/cron#available-cron-patterns to learn more about cron scheduling patterns.
+    You can also use the helper cron-schedules.js module that has some common cron schedules.
+  */
+  
+  let job = new CronJob( cronSchedules.EVERY_FOUR_HOURS, function() {
     helpers.loadImageAssets( function( err, urls ){
       /* First, load images from the assets folder. */
       if ( !err && urls && urls.length > 0 ){
@@ -29,7 +34,7 @@ let listener = app.listen( process.env.PORT, function () {
         //  REMOVE_POSTED_IMAGES='yes'
 
         helpers.loadImage( url, function( err, img_data ){
-          tweet.postImage( helpers.randomFromArray( [
+          twitter.postImage( helpers.randomFromArray( [
             'Check this out!',
             'New picture!'
           ] ), img_data, function( err ){
