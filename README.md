@@ -2,7 +2,7 @@
 
 # random-image-twitterbot-cron
 
-This project requires a [paid Glitch subscription](https://glitch.com/pricing). For a version that uses a third party scheduler, check out the [random-image-twitterbot](https://glitch.com/edit/#!/random-image-twitterbot) project.
+This project requires a [paid Glitch subscription](https://glitch.com/pricing).
 
 1. Update `.env` with your Twitter api keys ([see how to get them](https://botwiki.org/tutorials/how-to-create-a-twitter-app/)).
 2. Put all your images into the `assets` folder.
