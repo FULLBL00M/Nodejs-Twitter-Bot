@@ -1,7 +1,7 @@
 let express = require( 'express' ),
     helpers = require( __dirname + '/helpers/helpers.js' ),
     CronJob = require( 'cron' ).CronJob,
-    cronSchedules dirname + '/helpers/cron-schedules.js' ),    
+    cronSchedules = require( __dirname + '/helpers/cron-schedules.js' ),    
     twitter = require( __dirname + '/helpers/twitter.js' ),
     fs = require( 'fs' ),
     path = require( 'path' ),
