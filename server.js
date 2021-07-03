@@ -1,53 +1,98 @@
-let express = require( 'express' ),
-    helpers = require( __dirname + '/helpers/helpers.js' ),
-    CronJob = require( 'cron' ).CronJob,
-    cronSchedules = require( __dirname + '/helpers/cron-schedules.js' ),    
-    twitter = require( __dirname + '/helpers/twitter.js' ),
-    fs = require( 'fs' ),
-    path = require( 'path' ),
-    request = require( 'request' ),
-    app = express();
+/*
+  A simple Twitter bot that posts random images.
+  Tutorial: https://botwiki.org/resource/tutorial/random-image-tweet/
+*/
 
-app.use( express.static( 'public' ) );
+const fs = require( 'fs' ),
+      path = require( 'path' ),
+      Twit = require( 'twit' ),
+      config = require( path.join( __dirname, 'config.js' ) );
 
-let listener = app.listen( process.env.PORT, function () {
-  console.log( `Your app is listening on port ${listener.address().port}` );
-  
-  /*
-    Check out https://www.npmjs.com/package/cron#available-cron-patterns to learn more about cron scheduling patterns.
-    You can also use the helper cron-schedules.js module that has some common cron schedules.
-  */
-  
-  let job = new CronJob( cronSchedules.EVERY_FOUR_HOURS, function() {
-    helpers.loadImageAssets( function( err, urls ){
-      /* First, load images from the assets folder. */
-      if ( !err && urls && urls.length > 0 ){
+/*
+  Your config.js file should have the following format:
+  const config = {
+    consumer_key:         'XXXXX',
+    consumer_secret:      'XXXXX',
+    access_token:         'XXXXX',
+    access_token_secret:  'XXXXX'
+  }
+  module.exports = config;
+  Here's a tutorial on how to get the API keys: https://botwiki.org/resource/tutorial/how-to-create-a-twitter-app/
+*/
 
-        /* Pick a random image. */
-        
-        let url = helpers.randomFromArray( urls );
+const T = new Twit( config );
 
-        /* You could also get the first image alphabetically. */
-        //  let url = urls.sort()[0];
+function randomFromArray( images ){
+  /* Helper function for picking a random item from an array. */
+  return images[Math.floor( Math.random() * images.length )];
+}
 
-        /* If you want to delete the image after it's posted, update your .env file: */
-        //  REMOVE_POSTED_IMAGES='yes'
+function tweetRandomImage(){
+  /* First, read the content of the images folder. */
 
-        helpers.loadImage( url, function( err, img_data ){
-          twitter.postImage( helpers.randomFromArray( [
-            'Check this out!',
-            'New picture!'
-          ] ), img_data, function( err ){
-            if ( !err ){
-              let remove_posted_images = process.env.REMOVE_POSTED_IMAGES;
-              if ( remove_posted_images === 'yes' || remove_posted_images === 'true' ){
-                helpers.removeAsset( url );
+  fs.readdir( __dirname + '/images', function( err, files ) {
+    if ( err ){
+      console.log( 'error:', err );
+      return;
+    }
+    else{
+      let images = [];
+      files.forEach( function( f ) {
+        images.push( f );
+      } );
+
+      /* Then pick a random image. */
+
+      console.log( 'opening an image...' );
+
+      const imagePath = path.join( __dirname, '/images/' + randomFromArray( images ) ),
+            b64content = fs.readFileSync( imagePath, { encoding: 'base64' } );
+
+      /* Upload the image to Twitter. */
+
+      console.log( 'uploading an image...', imagePath );
+
+      T.post( 'media/upload', { media_data: b64content }, function ( err, data, response ) {
+        if ( err ){
+          console.log( 'error:', err );
+        }
+        else{
+          console.log( 'image uploaded, now tweeting it...' );
+
+          /* And finally, post a tweet with the image. */
+
+          T.post( 'statuses/update', {
+            media_ids: new Array( data.media_id_string )
+          },
+            function( err, data, response) {
+              if (err){
+                console.log( 'error:', err );
               }
-            }        
-          } );
-        } );
-      }
-    } );
+              else{
+                console.log( 'posted an image!' );
+
+                /* After successfully tweeting, we can delete the image.
+                   Keep this part commented out if you want to keep the image and reuse it later. */
+
+                // fs.unlink( imagePath, function( err ){
+                //   if ( err ){
+                //     console.log( 'error: unable to delete image ' + imagePath );
+                //   }
+                //   else{
+                //     console.log( 'image ' + imagePath + ' was deleted' );
+                //   }
+                // } );
+              }
+            }
+          );
+        }
+      } );
+    }
   } );
-  job.start();  
-} );
+}
+
+tweetRandomImage();  // Post an image immediately then starts the recurring function with 4 hour timeout below
+
+setInterval( function(){
+  tweetRandomImage();
+}, 14400000 );  // 4 hour timeout with no need for a cron job
